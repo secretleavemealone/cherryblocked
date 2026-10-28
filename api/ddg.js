@@ -1,41 +1,51 @@
 export default async function handler(req, res) {
-  const rawQuery = typeof req.query?.q === "string" ? req.query.q.trim() : "";
-  if (!rawQuery) {
+  const q = typeof req.query?.q === "string" ? req.query.q.trim() : "";
+  res.setHeader("Cache-Control", "no-store");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("Referrer-Policy", "no-referrer");
+
+  if (!q) {
     res.status(400).setHeader("Content-Type", "text/plain; charset=utf-8");
-    return res.end("Missing search query.");
+    return res.end("Enter a search query.");
   }
-  if (rawQuery.length > 300) {
+  if (q.length > 300) {
     res.status(400).setHeader("Content-Type", "text/plain; charset=utf-8");
     return res.end("Search query is too long.");
   }
 
-  try {
-    const target = "https://html.duckduckgo.com/html/?q=" + encodeURIComponent(rawQuery);
-    const upstream = await fetch(target, {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36",
-        "Accept": "text/html,application/xhtml+xml"
-      },
-      signal: AbortSignal.timeout(10000)
-    });
+  // DuckDuckGo's HTML endpoint can reject cloud-hosted requests. Try its
+  // lightweight results endpoint as a fallback, without accepting proxy URLs.
+  const endpoints = [
+    "https://lite.duckduckgo.com/lite/?q=" + encodeURIComponent(q),
+    "https://html.duckduckgo.com/html/?q=" + encodeURIComponent(q)
+  ];
+  let lastStatus = 502;
 
-    const html = await upstream.text();
-    if (!upstream.ok) {
-      res.status(upstream.status).setHeader("Content-Type", "text/plain; charset=utf-8");
-      return res.end("DuckDuckGo returned HTTP " + upstream.status + ".");
+  for (const target of endpoints) {
+    try {
+      const upstream = await fetch(target, {
+        headers: {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+          "Accept-Language": "en-US,en;q=0.9",
+          "Referer": "https://duckduckgo.com/"
+        },
+        redirect: "follow",
+        signal: AbortSignal.timeout(12000)
+      });
+      const html = await upstream.text();
+      lastStatus = upstream.status;
+      if (!upstream.ok) continue;
+
+      res.status(200);
+      res.setHeader("Content-Type", "text/html; charset=utf-8");
+      res.setHeader("Content-Security-Policy", "default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval'; frame-ancestors 'none';");
+      return res.end(html);
+    } catch (_) {
+      // Try the next fixed DuckDuckGo endpoint.
     }
-
-    // Serve DuckDuckGo's actual HTML response from this site's origin.
-    // Keep this endpoint fixed to DuckDuckGo; never accept arbitrary proxy URLs.
-    res.status(200);
-    res.setHeader("Content-Type", "text/html; charset=utf-8");
-    res.setHeader("Cache-Control", "no-store");
-    res.setHeader("X-Content-Type-Options", "nosniff");
-    res.setHeader("Referrer-Policy", "no-referrer");
-    res.setHeader("Content-Security-Policy", "default-src 'self' https: data: blob: 'unsafe-inline' 'unsafe-eval'; frame-ancestors 'none';");
-    return res.end(html);
-  } catch (error) {
-    res.status(502).setHeader("Content-Type", "text/plain; charset=utf-8");
-    return res.end("Could not reach DuckDuckGo from CherryBlocked. " + (error?.name === "TimeoutError" ? "The request timed out." : "Please try again later."));
   }
+
+  res.status(502).setHeader("Content-Type", "text/plain; charset=utf-8");
+  return res.end("DuckDuckGo blocked CherryBlocked's server request (HTTP " + lastStatus + "). DuckDuckGo must allow the server request for this proxy to work.");
 }
