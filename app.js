@@ -2,27 +2,32 @@ const modalBackdrop=document.getElementById('modalBackdrop');
 const modalTitle=document.getElementById('modalTitle');
 const modalDescription=document.getElementById('modalDescription');
 const modalContent=document.getElementById('modalContent');
-const hubSearch=document.getElementById('hubSearch');
+
 const panels={
-web:{title:'Web Search',description:'Search real DuckDuckGo results through CherryBlocked.',content:'<form id="webSearchForm" class="web-search-form"><input id="webQuery" class="tool-input" placeholder="Search the web..." autocomplete="off" required><button class="primary-button" type="submit">Search ↗</button></form><p>Search through CherryBlocked\'s server.</p>'},
-home:{title:'Welcome to CherryBlocked',description:'A better way to explore, create, and connect.',content:'<div class="modal-links"><button data-panel="games">Games</button><button data-panel="ai">AI Assistant</button><button data-panel="chat">Community Chat</button><button data-panel="dev">Developer Tools</button></div>'},
-games:{title:'Game Garden',description:'Your game library belongs here.',content:'<div class="modal-links"><button data-note="library">Browse games</button><button data-note="favorites">Favorites</button></div><p>Game embeds and the game catalog can be added here.</p>'},
-ai:{title:'AI Assistant',description:'A place for ideas, coding help, and creative experiments.',content:'<div class="modal-links"><button data-note="ai">Connect AI</button><button data-note="coding">Coding helper</button></div><p>Live AI needs a secure backend. Keep API keys out of browser code.</p>'},
-chat:{title:'Community Chat',description:'A place to say hello.',content:'<p>Live chat needs authentication and a database backend such as Firebase or Supabase.</p>'},
-dev:{title:'Developer Tools',description:'Handy utilities that run locally in your browser.',content:'<div class="modal-links"><button data-tool="json">JSON formatter</button><button data-tool="base64">Base64</button><button data-tool="url">URL encoder</button><button data-tool="timestamp">Timestamp</button></div>'},
-settings:{title:'Settings',description:'Personalize your CherryBlocked experience.',content:'<label class="setting-row">Reduce motion <input id="reduceMotion" type="checkbox"></label><label class="setting-row">Dim background <input id="dimBg" type="checkbox"></label><button class="primary-button" id="saveSettings">Save preferences</button>'}
+  home:{title:'Welcome home',description:'What do you want to do?',content:'<div class="modal-links"><button data-panel="games">🎮 Browse games</button><button data-panel="chat">💬 Open community chat</button></div>'},
+  games:{title:'Game Garden',description:'Pick a game and start playing.',content:'<div class="game-list"><a class="game-item" href="https://2048game.com/" target="_blank" rel="noopener noreferrer"><span>🔢</span><span><strong>2048</strong><small>Slide, match, and reach 2048.</small></span><b>↗</b></a><a class="game-item" href="https://tetris.com/play-tetris" target="_blank" rel="noopener noreferrer"><span>🧱</span><span><strong>Tetris</strong><small>Stack blocks and clear lines.</small></span><b>↗</b></a><a class="game-item" href="https://poki.com/" target="_blank" rel="noopener noreferrer"><span>🕹️</span><span><strong>Poki</strong><small>Browse a big collection of browser games.</small></span><b>↗</b></a><a class="game-item" href="https://www.crazygames.com/" target="_blank" rel="noopener noreferrer"><span>🎯</span><span><strong>CrazyGames</strong><small>Explore more free online games.</small></span><b>↗</b></a></div><p class="small-note">Games open in a new tab.</p>'},
+  chat:{title:'Community Chat',description:'Chat is part of CherryBlocked. A live shared chat needs a database and authentication connection.',content:'<div class="chat-placeholder"><div class="chat-icon">💬</div><strong>Community chat setup</strong><p>The chat screen is ready to be connected to a real-time chat backend. Messages cannot be shared between visitors until that connection is configured.</p></div>'},
+  settings:{title:'Settings',description:'Personalize your experience on this device.',content:'<label class="setting-row">Reduce motion <input id="reduceMotion" type="checkbox"></label><label class="setting-row">Dim background <input id="dimBg" type="checkbox"></label><button class="primary-button" id="saveSettings" type="button">Save preferences</button>'}
 };
-function openPanel(name){const p=panels[name];if(!p)return;modalTitle.textContent=p.title;modalDescription.textContent=p.description;modalContent.innerHTML=p.content;modalBackdrop.hidden=false;if(name==='settings'){document.getElementById('reduceMotion').checked=localStorage.getItem('cb-reduce-motion')==='1';document.getElementById('dimBg').checked=localStorage.getItem('cb-dim-bg')==='1';}}
+function openPanel(name){
+  const panel=panels[name];if(!panel)return;
+  modalTitle.textContent=panel.title;modalDescription.textContent=panel.description;modalContent.innerHTML=panel.content;modalBackdrop.hidden=false;
+  document.querySelectorAll('[data-panel]').forEach(button=>button.classList.toggle('active',button.dataset.panel===name));
+  if(name==='settings'){document.getElementById('reduceMotion').checked=localStorage.getItem('cb-reduce-motion')==='1';document.getElementById('dimBg').checked=localStorage.getItem('cb-dim-bg')==='1';}
+}
 function closePanel(){modalBackdrop.hidden=true;}
-document.addEventListener('click',function(e){
- const panel=e.target.closest('[data-panel]');if(panel){e.preventDefault();openPanel(panel.dataset.panel);return;}
- if(e.target.closest('#closeModal')){closePanel();return;}
- if(e.target===modalBackdrop){closePanel();return;}
- const note=e.target.closest('[data-note]');if(note){modalDescription.textContent=({library:'The game catalog can be connected here.',favorites:'Favorites can be saved when accounts are connected.',ai:'Connect an AI provider through a secure server endpoint.',coding:'A coding assistant can be connected through a secure server endpoint.'})[note.dataset.note]||'Coming soon';return;}
- const tool=e.target.closest('[data-tool]');if(tool){renderTool(tool.dataset.tool);return;}
- if(e.target.closest('#saveSettings')){localStorage.setItem('cb-reduce-motion',document.getElementById('reduceMotion').checked?'1':'0');localStorage.setItem('cb-dim-bg',document.getElementById('dimBg').checked?'1':'0');document.querySelector('.backdrop').style.animation=document.getElementById('reduceMotion').checked?'none':'';document.querySelector('.veil').style.opacity=document.getElementById('dimBg').checked?'1':'.45';modalDescription.textContent='Preferences saved on this device.';}
+document.addEventListener('click',function(event){
+  const panel=event.target.closest('[data-panel]');if(panel){event.preventDefault();openPanel(panel.dataset.panel);return;}
+  if(event.target.closest('#closeModal')){closePanel();return;}
+  if(event.target===modalBackdrop){closePanel();return;}
+  if(event.target.closest('#saveSettings')){
+    const reduce=document.getElementById('reduceMotion').checked;
+    const dim=document.getElementById('dimBg').checked;
+    localStorage.setItem('cb-reduce-motion',reduce?'1':'0');
+    localStorage.setItem('cb-dim-bg',dim?'1':'0');
+    document.querySelector('.backdrop').style.animation=reduce?'none':'';
+    document.querySelector('.veil').style.opacity=dim?'0.8':'';
+    modalDescription.textContent='Preferences saved on this device.';
+  }
 });
-document.addEventListener('submit',function(e){if(e.target.id!=='webSearchForm')return;e.preventDefault();const q=document.getElementById('webQuery').value.trim();if(q)window.location.href='/api/ddg?q='+encodeURIComponent(q);});
-document.addEventListener('keydown',function(e){if(e.key==='Escape')closePanel();if(e.key==='/'&&document.activeElement.tagName!=='INPUT'&&hubSearch){e.preventDefault();hubSearch.focus();}});
-if(hubSearch)hubSearch.addEventListener('input',function(){const q=hubSearch.value.toLowerCase().trim();document.querySelectorAll('.feature').forEach(t=>t.style.display=t.innerText.toLowerCase().includes(q)?'flex':'none');});
-function renderTool(tool){modalTitle.textContent=({json:'JSON formatter',base64:'Base64 encoder',url:'URL encoder',timestamp:'Unix timestamp'})[tool];modalDescription.textContent='Runs locally in your browser.';modalContent.innerHTML='<textarea class="tool-input" id="toolInput" rows="4" placeholder="Enter text or JSON"></textarea><button class="primary-button" id="runTool" type="button">Run tool</button><pre class="tool-output" id="toolOutput">Result appears here.</pre>';document.getElementById('runTool').addEventListener('click',function(){let v=document.getElementById('toolInput').value,out='';try{out=tool==='json'?JSON.stringify(JSON.parse(v),null,2):tool==='base64'?btoa(unescape(encodeURIComponent(v))):tool==='url'?encodeURIComponent(v):String(Math.floor(Date.now()/1000));}catch(err){out='Invalid input: '+err.message;}document.getElementById('toolOutput').textContent=out;});}
+document.addEventListener('keydown',event=>{if(event.key==='Escape')closePanel();});
