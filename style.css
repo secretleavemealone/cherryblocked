@@ -13,3 +13,17 @@
 .game-item>span:first-child{font-size:26px}.game-item strong,.game-item small{display:block}.game-item small,.small-note{font-size:12px;color:#ffffffb8;margin-top:3px}.game-item>b{color:#ffb8e1}
 .chat-placeholder{margin-top:18px;padding:25px 18px;text-align:center;border:1px solid #ffffff35;border-radius:15px;background:#ffffff0c}.chat-icon{font-size:38px;margin-bottom:8px}.chat-placeholder p{color:#ffffffc7;font-size:13px;line-height:1.7}
 @media(max-width:800px){.topbar{grid-template-columns:1fr auto;padding:0 18px}.top-right{gap:12px}.sidebar{position:static;width:auto;min-height:0;margin:0 14px;padding:7px;display:flex;flex-direction:row;justify-content:center}.side-link{justify-content:center;gap:7px;padding:10px 13px}.main{width:calc(100% - 30px);margin:0 auto;padding:75px 0 55px}.two-features{grid-template-columns:1fr;max-width:420px}.hero h1{font-size:clamp(34px,8vw,52px)}.hero-flower{font-size:32px;margin-right:8px}footer{padding:18px}}
+
+/* Playable CherryBlocked mini-games */
+.game-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+button.game-item{font:inherit;text-align:left;cursor:pointer}
+.game-back{margin:0 0 12px;border:0;background:transparent;color:#ffd4ee;padding:6px 0;font-size:12px}
+.game-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 0;font-size:13px}
+.game-toolbar span{color:#ffffffd0}.game-toolbar b{color:#ffd0ec}
+.board2048{position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;padding:8px;border-radius:14px;background:#160d20;touch-action:pan-y;max-width:410px;margin:0 auto}
+.tile{aspect-ratio:1;display:grid;place-items:center;border-radius:8px;background:#ffffff12;color:#fff;font-size:clamp(16px,4vw,26px);font-weight:800}
+.tile-2{background:#fbe4f1;color:#54344c}.tile-4{background:#f7c9e4;color:#54344c}.tile-8{background:#f5a8d4}.tile-16{background:#ef8bc5}.tile-32{background:#e76ab5}.tile-64{background:#db4ca5}.tile-128,.tile-256,.tile-512{background:#bb3c91;font-size:clamp(13px,3vw,22px)}.tile-1024,.tile-2048{background:#8d347e;font-size:clamp(11px,2.6vw,19px)}
+.game-overlay{position:absolute;inset:8px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;background:#170d20d9;border-radius:12px;font-size:25px}
+.snake-canvas{display:block;width:min(100%,400px);height:auto;aspect-ratio:1;border-radius:14px;border:1px solid #ffffff25;margin:0 auto;touch-action:pan-y}
+.reaction-wrap{text-align:center;padding:8px 0}.reaction-box{min-height:190px;border:1px solid #ffffff30;border-radius:16px;background:#ffffff10;display:grid;place-items:center;text-align:center;font-size:21px;font-weight:800;margin:12px 0;cursor:pointer;padding:20px}.reaction-box.waiting{background:#a84b49}.reaction-box.go{background:#27875d}.reaction-box.early{background:#8b3156}.reaction-result{font-size:12px!important}
+@media(max-width:480px){.game-grid{grid-template-columns:1fr}.game-toolbar{font-size:11px}.board2048{gap:5px;padding:6px}.tile{border-radius:6px}}
