@@ -1,11 +1,34 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#1d1223"><title>CherryBlocked</title><meta name="description" content="CherryBlocked — your little corner of the internet."><link rel="stylesheet" href="style.css"></head>
-<body><div class="backdrop"></div><div class="veil"></div>
-<header class="topbar"><a class="brand" href="#"><span class="flower">✿</span>Cherry<span>Blocked</span></a><label class="global-search"><span>⌕</span><input id="hubSearch" placeholder="Search games, tools, or anything..." autocomplete="off"></label><div class="top-right"><button class="top-link active" data-panel="home">⌂ <span>Home</span></button><button class="avatar" data-panel="settings" aria-label="Profile and settings">●⌄</button></div></header>
-<aside class="sidebar glass"><button class="side-link active" data-panel="home">⌂ <span>Home</span></button><button class="side-link" data-panel="games">♧ <span>Games</span></button><button class="side-link" data-panel="web">⌕ <span>Web</span></button><button class="side-link" data-panel="ai">✧ <span>AI</span></button><button class="side-link" data-panel="chat">☏ <span>Chat</span></button><button class="side-link" data-panel="dev">⌘ <span>Developer Tools</span></button><button class="side-link" data-panel="settings">⚙ <span>Settings</span></button></aside>
-<main class="main"><section class="hero"><div class="hero-flower">✿</div><h1>Cherry<span>Blocked</span></h1></section>
-<section class="feature-grid"><button class="feature glass" data-panel="games"><span class="feature-icon">🎮</span><strong>Games</strong><small>Play your favorite games<br>right in your browser.</small></button><button class="feature glass" data-panel="ai"><span class="feature-icon">✧</span><strong>AI Assistant</strong><small>Get help, ask questions,<br>create anything.</small></button><button class="feature glass" data-panel="chat"><span class="feature-icon">☏</span><strong>Chat</strong><small>Meet, talk, and connect<br>with others.</small></button><button class="feature glass" data-panel="dev"><span class="feature-icon">⌘</span><strong>Developer Tools</strong><small>Code, build, and explore<br>with powerful tools.</small></button><button class="feature glass" data-panel="settings"><span class="feature-icon">⚙</span><strong>Settings</strong><small>Customize your<br>experience.</small></button></section>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1d1223"><title>CherryBlocked — Games & Chat</title>
+<meta name="description" content="CherryBlocked — play games and hang out with your community.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="backdrop"></div><div class="veil"></div>
+<header class="topbar">
+  <a class="brand" href="#" aria-label="CherryBlocked home"><span class="flower">✿</span>Cherry<span>Blocked</span></a>
+  <div class="top-right"><button class="top-link active" data-panel="home">⌂ <span>Home</span></button><button class="avatar" data-panel="settings" aria-label="Settings">⚙</button></div>
+</header>
+<aside class="sidebar glass">
+  <button class="side-link active" data-panel="home">⌂ <span>Home</span></button>
+  <button class="side-link" data-panel="games">🎮 <span>Games</span></button>
+  <button class="side-link" data-panel="chat">☏ <span>Chat</span></button>
+</aside>
+<main class="main">
+  <section class="hero"><div class="hero-flower">✿</div><h1>Cherry<span>Blocked</span></h1><p>Play a little. Chat a lot.</p></section>
+  <section class="feature-grid two-features">
+    <button class="feature glass" data-panel="games"><span class="feature-icon">🎮</span><strong>Games</strong><small>Jump into a game<br>and have some fun.</small><span class="card-cta">Explore games ↗</span></button>
+    <button class="feature glass" data-panel="chat"><span class="feature-icon">💬</span><strong>Community Chat</strong><small>Hang out, share messages,<br>and talk with others.</small><span class="card-cta">Open chat ↗</span></button>
+  </section>
 </main>
-
-<footer>CHERRYBLOCKED <span>TAKE THE SCENIC ROUTE <b>✿</b></span></footer>
-<div class="modal-backdrop" id="modalBackdrop" hidden><section class="modal glass" role="dialog" aria-modal="true"><button class="close" id="closeModal">×</button><div class="modal-flower">✿</div><div class="eyebrow">CHERRYBLOCKED</div><h2 id="modalTitle">Welcome home.</h2><p id="modalDescription">Choose a destination.</p><div id="modalContent"></div></section></div><script src="app.js"></script></body></html>
+<footer>CHERRYBLOCKED <span>PLAY • CHAT <b>✿</b></span></footer>
+<div class="modal-backdrop" id="modalBackdrop" hidden>
+<section class="modal glass" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+<button class="close" id="closeModal" aria-label="Close">×</button><div class="modal-flower">✿</div><div class="eyebrow">CHERRYBLOCKED</div>
+<h2 id="modalTitle">Welcome home.</h2><p id="modalDescription">Choose a destination.</p><div id="modalContent"></div>
+</section></div>
+<script src="app.js"></script>
+</body></html>
